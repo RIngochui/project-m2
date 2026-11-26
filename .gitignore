@@ -1,0 +1,23 @@
+# Godot
+.godot/
+/android/
+*.translation
+export_credentials.cfg
+
+# Builds
+/builds/
+/export/
+
+# Blender backups
+*.blend1
+*.blend2
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+*.tmp
+
+# Claude Code local-only settings
+.claude/settings.local.json
+CLAUDE.local.md

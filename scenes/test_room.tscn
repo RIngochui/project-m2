@@ -1,0 +1,161 @@
+[gd_scene load_steps=16 format=3]
+
+[ext_resource type="Script" path="res://stage/test_room.gd" id="1_room"]
+[ext_resource type="PackedScene" path="res://fighter/fighter.tscn" id="2_fighter"]
+[ext_resource type="Script" path="res://stage/platform.gd" id="3_platform"]
+[ext_resource type="Script" path="res://stage/ledge.gd" id="4_ledge"]
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 1
+background_color = Color(0.09, 0.1, 0.13, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.65, 0.68, 0.78, 1)
+ambient_light_energy = 0.7
+
+[sub_resource type="StandardMaterial3D" id="Mat_ground"]
+albedo_color = Color(0.32, 0.34, 0.4, 1)
+
+[sub_resource type="BoxShape3D" id="Shape_main"]
+size = Vector3(16, 4, 2)
+
+[sub_resource type="BoxMesh" id="Mesh_main"]
+material = SubResource("Mat_ground")
+size = Vector3(16, 4, 2)
+
+[sub_resource type="BoxShape3D" id="Shape_pillar"]
+size = Vector3(2, 10, 2)
+
+[sub_resource type="BoxMesh" id="Mesh_pillar"]
+material = SubResource("Mat_ground")
+size = Vector3(2, 10, 2)
+
+[sub_resource type="BoxShape3D" id="Shape_lower"]
+size = Vector3(6, 1, 2)
+
+[sub_resource type="BoxMesh" id="Mesh_lower"]
+material = SubResource("Mat_ground")
+size = Vector3(6, 1, 2)
+
+[sub_resource type="StandardMaterial3D" id="Mat_blast"]
+transparency = 1
+albedo_color = Color(1, 0.3, 0.3, 0.12)
+shading_mode = 0
+
+[sub_resource type="BoxMesh" id="Mesh_blast_floor"]
+material = SubResource("Mat_blast")
+size = Vector3(56, 0.1, 0.1)
+
+[sub_resource type="BoxMesh" id="Mesh_blast_side"]
+material = SubResource("Mat_blast")
+size = Vector3(0.1, 32, 0.1)
+
+[node name="TestRoom" type="Node3D"]
+process_mode = 3
+script = ExtResource("1_room")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866, -0.25, 0.433, 0, 0.866, 0.5, -0.5, -0.433, 0.75, 0, 10, 0)
+light_energy = 1.1
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 16)
+fov = 50.0
+
+[node name="Spawn" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="MainStage" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
+
+[node name="Collision" type="CollisionShape3D" parent="MainStage"]
+shape = SubResource("Shape_main")
+
+[node name="Mesh" type="MeshInstance3D" parent="MainStage"]
+mesh = SubResource("Mesh_main")
+
+[node name="LedgeLeft" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, 0)
+script = ExtResource("4_ledge")
+facing_out = -1
+
+[node name="LedgeRight" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 0)
+script = ExtResource("4_ledge")
+
+[node name="PlatformLeft" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8, 2.7, 0)
+script = ExtResource("3_platform")
+
+[node name="PlatformRight" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8, 2.7, 0)
+script = ExtResource("3_platform")
+
+[node name="PlatformTop" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.4, 0)
+script = ExtResource("3_platform")
+
+[node name="Pillar" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, -2, 0)
+
+[node name="Collision" type="CollisionShape3D" parent="Pillar"]
+shape = SubResource("Shape_pillar")
+
+[node name="Mesh" type="MeshInstance3D" parent="Pillar"]
+mesh = SubResource("Mesh_pillar")
+
+[node name="PillarLedgeLeft" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 3, 0)
+script = ExtResource("4_ledge")
+facing_out = -1
+
+[node name="PillarLedgeRight" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 3, 0)
+script = ExtResource("4_ledge")
+
+[node name="LowerBlock" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, -4.5, 0)
+
+[node name="Collision" type="CollisionShape3D" parent="LowerBlock"]
+shape = SubResource("Shape_lower")
+
+[node name="Mesh" type="MeshInstance3D" parent="LowerBlock"]
+mesh = SubResource("Mesh_lower")
+
+[node name="LowerLedgeLeft" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -4, 0)
+script = ExtResource("4_ledge")
+facing_out = -1
+
+[node name="LowerLedgeRight" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, -4, 0)
+script = ExtResource("4_ledge")
+
+[node name="BlastBottom" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -14, 0)
+mesh = SubResource("Mesh_blast_floor")
+
+[node name="BlastLeft" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 2, 0)
+mesh = SubResource("Mesh_blast_side")
+
+[node name="BlastRight" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 2, 0)
+mesh = SubResource("Mesh_blast_side")
+
+[node name="Fighter" parent="." instance=ExtResource("2_fighter")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="Debug" type="CanvasLayer" parent="."]
+
+[node name="Overlay" type="Label" parent="Debug"]
+offset_left = 16.0
+offset_top = 12.0
+offset_right = 760.0
+offset_bottom = 260.0
+theme_override_colors/font_color = Color(0.92, 0.94, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 15
